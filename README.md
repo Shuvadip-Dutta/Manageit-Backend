@@ -1,12 +1,25 @@
 # Manageit-Backend
 
-#API Documentation
+Required modules:
+npm init
+________________________________________
+npm install express mongoose mongodb bcrypt jsonwebtoken firebase-admin multer firebase nodemailer crypto socket.io
+________________________________________
+npm i -g nodemon
+________________________________________
 
+To run:
+npx nodemon server.js
+
+
+#API Documentation
+________________________________________
 #Base URL
 http://<your-server-url>/api
 Replace <your-api-domain> with your actual domain or localhost.
 
 #userRoutes.js
+________________________________________
 Authentication
 All routes require authentication except for the registration and login endpoints.
 Authentication Token
@@ -15,6 +28,7 @@ Authorization: Bearer <token>
 Endpoints
 1. Send OTP for Registration
 •	POST /register/send-otp
+________________________________________
 Request Body:
 json
 {
@@ -40,6 +54,7 @@ json
 ________________________________________
 2. Verify OTP for Registration
 •	POST /register/verify-otp
+________________________________________
 Request Body:
 json
 
@@ -75,6 +90,7 @@ json
 ________________________________________
 3. Complete Registration
 •	POST /register/complete
+________________________________________
 Request Body:
 json
 
@@ -116,6 +132,7 @@ ________________________________________
 
 4. Login
 •	POST /login
+________________________________________
 Request Body:
 json
 
@@ -145,6 +162,7 @@ json
 ________________________________________
 5. Get User Profile
 •	GET /profile
+________________________________________
 Response:
 •	200 OK
 json
@@ -171,6 +189,7 @@ json
 ________________________________________
 6. Update User Profile
 •	PUT /profile
+________________________________________
 Request Body:
 json
 
@@ -209,6 +228,7 @@ json
 ________________________________________
 7. Logout
 •	POST /logout
+________________________________________
 Response:
 •	200 OK
 json
@@ -225,6 +245,7 @@ json
 ________________________________________
 8. Delete User Account
 •	DELETE /delete
+________________________________________
 Response:
 •	200 OK
 json
@@ -241,6 +262,7 @@ json
 ________________________________________
 9. Send OTP for Forgot Password
 •	POST /forgot-password/send-otp
+________________________________________
 Request Body:
 json
 
@@ -270,6 +292,7 @@ json
 ________________________________________
 10. Verify OTP for Password Reset
 •	POST /reset-password/verify-otp
+________________________________________
 Request Body:
 json
 
@@ -299,6 +322,7 @@ json
 ________________________________________
 11. Reset Password
 •	POST /reset-password/change-password
+________________________________________
 Request Body:
 json
 
@@ -332,13 +356,16 @@ json
 {
   "error": "An error occurred while changing the password. Please try again later."
 }
+________________________________________
 
 #organizationRoutes.js
+________________________________________
 Authentication
 •	All endpoints require a valid JWT token for access.
 ________________________________________
 1. Create Organization
 POST /organizations
+________________________________________
 Description: Creates a new organization.
 Request Body:
 json
@@ -361,6 +388,7 @@ json
 ________________________________________
 2. Get All Organizations
 GET /organizations
+________________________________________
 Description: Retrieves all organizations for the authenticated user.
 Response:
 •	200 OK: Successfully retrieved organizations.
@@ -381,6 +409,7 @@ json
 ________________________________________
 3. Invite User
 POST /organizations/:orgId/invite
+________________________________________
 Description: Sends an invitation to a user to join the organization.
 URL Parameters:
 •	orgId: The ID of the organization.
@@ -408,6 +437,7 @@ json
 ________________________________________
 4. See All Invites (User)
 GET /invites
+________________________________________
 Description: Retrieves all invites for the authenticated user.
 Response:
 •	200 OK: Successfully retrieved invites.
@@ -426,11 +456,9 @@ json
 •	404 Not Found: No invites found.
 •	500 Internal Server Error: Failed to fetch invites.
 ________________________________________
-
-
-
 5. See All Invite Status (Admin)
 GET /organizations/:orgId/invites
+________________________________________
 Description: Retrieves all invites for the specified organization.
 URL Parameters:
 •	orgId: The ID of the organization.
@@ -453,6 +481,7 @@ json
 ________________________________________
 6. Accept or Decline Invite
 POST /invites/:inviteId
+________________________________________
 Description: Updates the status of an invite.
 URL Parameters:
 •	inviteId: The ID of the invite.
@@ -481,6 +510,7 @@ json
 ________________________________________
 7. Leave Organization
 POST /organizations/:orgId/leave
+________________________________________
 Description: Allows a user to leave an organization.
 URL Parameters:
 •	orgId: The ID of the organization.
@@ -496,6 +526,7 @@ json
 ________________________________________
 8. Update Organization Details
 PUT /organizations/:orgId
+________________________________________
 Description: Updates the details of an organization.
 URL Parameters:
 •	orgId: The ID of the organization.
@@ -523,6 +554,7 @@ json
 ________________________________________
 9. Get All Members of an Organization (Admin)
 GET /organizations/:orgId/members
+________________________________________
 Description: Retrieves all members of the specified organization.
 URL Parameters:
 •	orgId: The ID of the organization.
@@ -540,6 +572,7 @@ json
 ________________________________________
 10. Manage Members (Admin)
 DELETE /organizations/:orgId/members/:userId
+________________________________________
 Description: Removes a member from the organization.
 URL Parameters:
 •	orgId: The ID of the organization.
@@ -561,6 +594,7 @@ json
 ________________________________________
 11. Delete Organization (Admin)
 DELETE /organizations/:orgId
+________________________________________
 Description: Deletes the specified organization.
 URL Parameters:
 •	orgId: The ID of the organization.
@@ -577,6 +611,7 @@ json
 ________________________________________
 12. Upload Image
 POST /organizations/:orgId/upload-image
+________________________________________
 Description: Uploads an image to the organization.
 URL Parameters:
 •	orgId: The ID of the organization.
@@ -596,6 +631,7 @@ json
 ________________________________________
 13. Upload Video
 POST /organizations/:orgId/upload-video
+________________________________________
 Description: Uploads a video to the organization.
 URL Parameters:
 •	orgId: The ID of the organization.
@@ -615,6 +651,7 @@ json
 ________________________________________
 14. Update Media
 PUT /organizations/:orgId/update-media/:mediaId
+________________________________________
 Description: Updates an existing media file.
 URL Parameters:
 •	orgId: The ID of the organization.
@@ -635,6 +672,7 @@ json
 ________________________________________
 15. Delete Media
 DELETE /organizations/:orgId/delete-media/:mediaId
+________________________________________
 Description: Deletes a media file from the organization.
 URL Parameters:
 •	orgId: The ID of the organization.
@@ -649,10 +687,13 @@ json
 •	403 Forbidden: Unauthorized to delete media.
 •	404 Not Found: Media not found.
 •	500 Internal Server Error: Failed to delete media.
+________________________________________
 
 #boardRoutes.js
+________________________________________
 1. Create Board
 •	Endpoint: POST /organizations/:orgId/boards
+________________________________________
 •	Description: Creates a new board in the specified organization.
 •	Headers:
 o	Authorization: Bearer <token>
@@ -681,6 +722,7 @@ json
 ________________________________________
 2. Get All Boards
 •	Endpoint: GET /organizations/:orgId/boards
+________________________________________
 •	Description: Retrieves all boards within the specified organization.
 •	Headers:
 o	Authorization: Bearer <token>
@@ -705,6 +747,7 @@ json
 ________________________________________
 3. Delete Board
 •	Endpoint: DELETE /organizations/:orgId/boards/:boardId
+________________________________________
 •	Description: Deletes a specific board from the organization.
 •	Headers:
 o	Authorization: Bearer <token>
@@ -736,6 +779,7 @@ json
 ________________________________________
 4. Create Card
 •	Endpoint: POST /organizations/:orgId/boards/:boardId/cards
+________________________________________
 •	Description: Creates a new card in the specified board.
 •	Headers:
 o	Authorization: Bearer <token>
@@ -766,6 +810,7 @@ json
 ________________________________________
 5. Get All Cards in a Board
 •	Endpoint: GET /organizations/:orgId/boards/:boardId/cards
+________________________________________
 •	Description: Retrieves all cards in a specified board.
 •	Headers:
 o	Authorization: Bearer <token>
@@ -791,6 +836,7 @@ json
 ________________________________________
 6. Delete Card
 •	Endpoint: DELETE /organizations/:orgId/boards/:boardId/cards/:cardId
+________________________________________
 •	Description: Deletes a specific card from the board.
 •	Headers:
 o	Authorization: Bearer <token>
@@ -816,6 +862,7 @@ json
 ________________________________________
 7. Create an Item in a Card
 •	Endpoint: POST /organizations/:orgId/boards/:boardId/cards/:cardId/items
+________________________________________
 •	Description: Creates a new item in the specified card.
 •	Headers:
 o	Authorization: Bearer <token>
@@ -843,6 +890,7 @@ json
 ________________________________________
 8. Get Items in a Card
 •	Endpoint: GET /organizations/:orgId/boards/:boardId/cards/:cardId/items
+________________________________________
 •	Description: Retrieves all items in the specified card.
 •	Headers:
 o	Authorization: Bearer <token>
@@ -865,6 +913,7 @@ json
 ________________________________________
 9. Update an Item in a Card
 •	Endpoint: PUT /organizations/:orgId/boards/:boardId/cards/:cardId/items/:itemId
+________________________________________
 •	Description: Updates the specified item in the card.
 •	Headers:
 o	Authorization: Bearer <token>
@@ -892,6 +941,7 @@ json
 ________________________________________
 10. Delete an Item from a Card
 •	Endpoint: DELETE /organizations/:orgId/boards/:boardId/cards/:cardId/items/:itemId
+________________________________________
 •	Description: Deletes a specific item from the card.
 •	Headers:
 o	Authorization: Bearer <token>

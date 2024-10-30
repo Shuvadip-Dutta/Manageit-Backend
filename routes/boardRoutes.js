@@ -14,7 +14,7 @@ router.post('/organizations/:orgId/boards', authenticateToken, checkMembership, 
     const newBoard = new Board({
         title,
         organizationId: orgId,
-        cards: [], // Start with an empty cards array
+        cards: [], 
     });
 
     try {
@@ -44,7 +44,6 @@ router.delete('/organizations/:orgId/boards/:boardId', authenticateToken, checkM
     const { orgId, boardId } = req.params;
 
     try {
-        // Check if the organization exists and if the user is the admin
         const organization = await Organization.findById(orgId);
         if (!organization) {
             return res.status(404).json({ error: 'Organization not found' });
@@ -54,7 +53,6 @@ router.delete('/organizations/:orgId/boards/:boardId', authenticateToken, checkM
             return res.status(403).json({ error: 'Only the admin can delete boards' });
         }
 
-        // Check if the board exists within the organization
         const board = await Board.findOne({ _id: boardId, organizationId: orgId });
         if (!board) {
             return res.status(404).json({ error: 'Board not found in this organization' });
@@ -80,7 +78,6 @@ router.post('/organizations/:orgId/boards/:boardId/cards', authenticateToken, ch
         if (!organization) {
             return res.status(404).json({ error: 'Organization not found' });
         }
-        // Check if the board exists within the organization
         const board = await Board.findOne({ _id: boardId, organizationId: orgId });
         if (!board) {
             return res.status(404).json({ error: 'Board not found in this organization' });
@@ -90,11 +87,11 @@ router.post('/organizations/:orgId/boards/:boardId/cards', authenticateToken, ch
             title,
             boardId,
             items: [],
-            position // Start with an empty items array
+            position
         });
 
         const savedCard = await newCard.save();
-        // Add the card ID to the corresponding board
+      
         await Board.findByIdAndUpdate(boardId, { $push: { cards: savedCard._id } });
 
         res.status(201).json(savedCard);
@@ -104,7 +101,7 @@ router.post('/organizations/:orgId/boards/:boardId/cards', authenticateToken, ch
     }
 });
 
-
+// Get all cards
 router.get('/organizations/:orgId/boards/:boardId/cards', authenticateToken, checkMembership, async (req, res) => {
     const { orgId, boardId } = req.params;
 
@@ -113,7 +110,7 @@ router.get('/organizations/:orgId/boards/:boardId/cards', authenticateToken, che
         if (!organization) {
             return res.status(404).json({ error: 'Organization not found' });
         }
-        // Check if the board exists within the organization
+        
         const board = await Board.findOne({ _id: boardId, organizationId: orgId });
         if (!board) {
             return res.status(404).json({ error: 'Board not found in this organization' });
@@ -123,6 +120,36 @@ router.get('/organizations/:orgId/boards/:boardId/cards', authenticateToken, che
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to fetch cards' });
+    }
+});
+
+// Update card title
+router.put('/organizations/:orgId/boards/:boardId/cards/:cardId/title', authenticateToken, checkMembership, async (req, res) => {
+    const { orgId, boardId, cardId } = req.params;
+    const { newTitle } = req.body; 
+
+    try {
+        const organization = await Organization.findById(orgId);
+        if (!organization) {
+            return res.status(404).json({ error: 'Organization not found' });
+        }
+
+        const board = await Board.findOne({ _id: boardId, organizationId: orgId });
+        if (!board) {
+            return res.status(404).json({ error: 'Board not found in this organization' });
+        }
+        const card = await Card.findById(cardId);
+        if (!card) {
+            return res.status(404).json({ error: 'Card not found' });
+        }
+
+        card.title = newTitle;
+        await card.save();
+
+        res.status(200).json({ message: 'Card title updated successfully', card });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to update card title' });
     }
 });
 
@@ -136,7 +163,6 @@ router.put('/organizations/:orgId/boards/:boardId/cards/:cardId/position', authe
         if (!organization) {
             return res.status(404).json({ error: 'Organization not found' });
         }
-        // Check if the board exists within the organization
         const board = await Board.findOne({ _id: boardId, organizationId: orgId });
         if (!board) {
             return res.status(404).json({ error: 'Board not found in this organization' });
@@ -146,7 +172,7 @@ router.put('/organizations/:orgId/boards/:boardId/cards/:cardId/position', authe
             return res.status(404).json({ error: 'Card not found' });
         }
 
-        card.position = newPosition; // Update the position
+        card.position = newPosition; 
         await card.save();
 
         res.status(200).json({ message: 'Card position updated successfully' });
@@ -162,13 +188,12 @@ router.delete('/organizations/:orgId/boards/:boardId/cards/:cardId', authenticat
     const { orgId, boardId, cardId } = req.params;
 
     try {
-        // Check if the organization exists and if the user is the admin
         const organization = await Organization.findById(orgId);
         if (!organization) {
             return res.status(404).json({ error: 'Organization not found' });
         }
 
-        // Check if the board exists within the organization
+    
         const board = await Board.findOne({ _id: boardId, organizationId: orgId });
         if (!board) {
             return res.status(404).json({ error: 'Board not found in this organization' });
@@ -178,7 +203,7 @@ router.delete('/organizations/:orgId/boards/:boardId/cards/:cardId', authenticat
         if (!card) {
             return res.status(404).json({ error: 'Card not found' });
         }
-        // Remove the card ID from the corresponding board
+        
         await Board.findByIdAndUpdate(boardId, { $pull: { cards: cardId } });
         res.status(200).json({ message: 'Card deleted successfully' });
     } catch (error) {
@@ -189,17 +214,17 @@ router.delete('/organizations/:orgId/boards/:boardId/cards/:cardId', authenticat
 
 // Create an item in a card
 router.post('/organizations/:orgId/boards/:boardId/cards/:cardId/items', authenticateToken, checkMembership, async (req, res) => {
-    const { orgId, boardId, cardId } = req.params; // Extracting cardId from params
+    const { orgId, boardId, cardId } = req.params; 
     const { title, assignedTo } = req.body;
 
     try {
-        // Check if the organization exists and if the user is the admin
+     
         const organization = await Organization.findById(orgId);
         if (!organization) {
             return res.status(404).json({ error: 'Organization not found' });
         }
 
-        // Check if the board exists within the organization
+
         const board = await Board.findOne({ _id: boardId, organizationId: orgId });
         if (!board) {
             return res.status(404).json({ error: 'Board not found in this organization' });
@@ -221,6 +246,7 @@ router.post('/organizations/:orgId/boards/:boardId/cards/:cardId/items', authent
     }
 });
 
+// Get all items
 router.get('/organizations/:orgId/boards/:boardId/cards/:cardId/items', authenticateToken, checkMembership, async (req, res) => {
     const { orgId, boardId, cardId } = req.params;
 
@@ -229,7 +255,7 @@ router.get('/organizations/:orgId/boards/:boardId/cards/:cardId/items', authenti
         if (!organization) {
             return res.status(404).json({ error: 'Organization not found' });
         }
-        // Check if the board exists within the organization
+
         const board = await Board.findOne({ _id: boardId, organizationId: orgId });
         if (!board) {
             return res.status(404).json({ error: 'Board not found in this organization' });
@@ -245,18 +271,56 @@ router.get('/organizations/:orgId/boards/:boardId/cards/:cardId/items', authenti
     }
 });
 
-// Delete an item from a card
-router.delete('/organizations/:orgId/boards/:boardId/cards/:cardId/items/:itemId', authenticateToken,checkMembership, async (req, res) => {
-    const { orgId, boardId, cardId, itemId } = req.params; // Extracting cardId and itemId from params
+// Update an item in a card
+router.put('/organizations/:orgId/boards/:boardId/cards/:cardId/items/:itemId', authenticateToken, checkMembership, async (req, res) => {
+    const { orgId, boardId, cardId, itemId } = req.params;
+    const { title, assignedTo } = req.body;
 
     try {
-        // Check if the organization exists and if the user is the admin
         const organization = await Organization.findById(orgId);
         if (!organization) {
             return res.status(404).json({ error: 'Organization not found' });
         }
 
-        // Check if the board exists within the organization
+        const board = await Board.findOne({ _id: boardId, organizationId: orgId });
+        if (!board) {
+            return res.status(404).json({ error: 'Board not found in this organization' });
+        }
+
+        const card = await Card.findById(cardId);
+        if (!card) {
+            return res.status(404).json({ error: 'Card not found' });
+        }
+
+        const item = card.items.id(itemId);
+        if (!item) {
+            return res.status(404).json({ error: 'Item not found' });
+        }
+
+        item.title = title || item.title;
+        item.assignedTo = assignedTo || item.assignedTo;
+        await card.save();
+
+        res.json(item);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to update item' });
+    }
+});
+
+
+// Delete an item from a card
+router.delete('/organizations/:orgId/boards/:boardId/cards/:cardId/items/:itemId', authenticateToken,checkMembership, async (req, res) => {
+    const { orgId, boardId, cardId, itemId } = req.params; 
+
+    try {
+       
+        const organization = await Organization.findById(orgId);
+        if (!organization) {
+            return res.status(404).json({ error: 'Organization not found' });
+        }
+
+      
         const board = await Board.findOne({ _id: boardId, organizationId: orgId });
         if (!board) {
             return res.status(404).json({ error: 'Board not found in this organization' });

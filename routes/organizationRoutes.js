@@ -176,7 +176,6 @@ router.post('/organizations/:orgId/leave', authenticateToken, async (req, res) =
         organization.members = organization.members.filter(memberId => memberId.toString() !== req.user.userId);
         await organization.save();
 
-        // Delete any pending invites for this user in the organization
         await Invite.deleteMany({ organization: orgId, invitee: req.user.userId, status: 'pending' });
 
         res.json({ message: 'Successfully left the organization' });
@@ -222,7 +221,6 @@ router.get('/organizations/:orgId/members', authenticateToken, async (req, res) 
             return res.status(403).json({ error: 'Unauthorized' });
         }
 
-        // Retrieve members
         const members = organization.members;
 
         res.json({ message: 'Members retrieved successfully', members });
@@ -246,7 +244,7 @@ router.delete('/organizations/:orgId/members/:userId', authenticateToken, async 
         organization.members = organization.members.filter(memberId => memberId.toString() !== req.user.userId);
         await organization.save();
 
-        // Delete any pending invites for this user in the organization
+      
         await Invite.deleteMany({ organization: orgId, invitee: userId, status: 'Accepted' });
 
         res.json({ message: 'Member removed successfully', organization });
@@ -386,8 +384,7 @@ router.put('/organizations/:orgId/update-media/:mediaId', authenticateToken, upl
         // Determine the folder based on media type
         const mediaFolder = media.mediaType === 'image' ? 'images' : 'videos';
 
-        // Delete the existing file from Firebase
-        const existingFileName = decodeURIComponent(media.url.split('/').pop().split('?')[0]); // Extract and decode filename
+        const existingFileName = decodeURIComponent(media.url.split('/').pop().split('?')[0]); 
         const existingFile = bucket.file(`${mediaFolder}/${existingFileName}`);
 
         try {
@@ -397,7 +394,7 @@ router.put('/organizations/:orgId/update-media/:mediaId', authenticateToken, upl
             return res.status(500).json({ error: 'Failed to delete existing file from storage' });
         }
 
-        // Upload new file to Firebase
+
         const firebaseFileName = `${media.mediaType}s/${orgId}_${userId}_${Date.now()}_${file.originalname}`;
         const newFileUpload = bucket.file(firebaseFileName);
 
@@ -434,24 +431,19 @@ router.delete('/organizations/:orgId/delete-media/:mediaId', authenticateToken, 
             return res.status(404).json({ error: 'Media not found' });
         };
 
-        // Determine the folder based on media type
+  
         const mediaFolder = media.mediaType === 'image' ? 'images' : 'videos';
 
-        // Delete the existing file from Firebase
-        const fileToDeleteName = decodeURIComponent(media.url.split('/').pop().split('?')[0]); // Extract and decode filename
-        // console.log('Attempting to delete file:', fileToDeleteName);
+        const fileToDeleteName = decodeURIComponent(media.url.split('/').pop().split('?')[0]); 
 
         const fileToDelete = bucket.file(`${mediaFolder}/${fileToDeleteName}`);
 
         try {
             await fileToDelete.delete();
-            // console.log(`Successfully deleted file: ${fileToDeleteName}`);
         } catch (error) {
-            // console.error('Error deleting file:', error);
             return res.status(500).json({ error: 'Failed to delete file from storage' });
         }
 
-        //Remove from mongo
         await Media.findByIdAndDelete(mediaId);
 
         res.json({ message: 'Media deleted successfully' });
@@ -474,11 +466,10 @@ router.delete('/organizations/:orgId/media/:mediaId', authenticateToken, async (
             return res.status(404).json({ error: 'Unauthorized or media not found' });
         };
 
-        // Determine the folder based on media type
+      
         const mediaFolder = media.mediaType === 'image' ? 'images' : 'videos';
 
-        // Delete the existing file from Firebase
-        const fileToDeleteName = decodeURIComponent(media.url.split('/').pop().split('?')[0]); // Extract and decode filename
+        const fileToDeleteName = decodeURIComponent(media.url.split('/').pop().split('?')[0]); 
         console.log('Attempting to delete file:', fileToDeleteName);
 
         const fileToDelete = bucket.file(`${mediaFolder}/${fileToDeleteName}`);
@@ -492,7 +483,6 @@ router.delete('/organizations/:orgId/media/:mediaId', authenticateToken, async (
         }
 
 
-        //Remove from mongo
         await Media.findByIdAndDelete(mediaId);
 
         res.json({ message: 'Media deleted successfully' });

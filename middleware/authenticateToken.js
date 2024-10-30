@@ -24,4 +24,3 @@ const authenticateToken = (req,res,next)=>{
 };
 
 module.exports = {authenticateToken,tokenBlacklist};
-// module.exports = authenticateToken;

@@ -71,7 +71,7 @@ router.post('/register/verify-otp', async (req, res) => {
 
         await Otp.deleteOne({ email }); // Clean up on successful verification
         await VerifiedEmail.create({ email });
-        res.json({ message: 'OTP verified successfully.' });
+        res.json({ message: 'OTP verified successfully.',otp });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred during OTP verification. Please try again later.' });

@@ -1,0 +1,29 @@
+[
+    {
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "dob": "1990-01-15T00:00:00.000Z",
+        "phoneNum": "8345855354"
+        "password": "IloveSVU"
+        id: 671c084817d43d82f8a23b50
+        orgid: 
+        
+    },
+    {
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "password": "Passw0rd!"
+        id: 671c086417d43d82f8a23b53
+        inviteid: 
+        
+    },
+    {
+        "name": "Alice Johnson",
+        "email": "alice.johnson@example.com",
+        "password": "Alice@2024"
+        id: 671c088617d43d82f8a23b56
+        "organization": ""
+        inviteid: 
+        
+    }
+]

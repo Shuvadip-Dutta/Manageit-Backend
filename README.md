@@ -1,12 +1,12 @@
 # Manageit-Backend
 
-API Documentation
+#API Documentation
 
-Base URL
+#Base URL
 http://<your-server-url>/api
 Replace <your-api-domain> with your actual domain or localhost.
 
-userRoutes.js
+#userRoutes.js
 Authentication
 All routes require authentication except for the registration and login endpoints.
 Authentication Token
@@ -333,25 +333,7 @@ json
   "error": "An error occurred while changing the password. Please try again later."
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-organizationRoutes.js
+#organizationRoutes.js
 Authentication
 •	All endpoints require a valid JWT token for access.
 ________________________________________
@@ -668,8 +650,7 @@ json
 •	404 Not Found: Media not found.
 •	500 Internal Server Error: Failed to delete media.
 
-
-boardRoutes.js
+#boardRoutes.js
 1. Create Board
 •	Endpoint: POST /organizations/:orgId/boards
 •	Description: Creates a new board in the specified organization.
@@ -928,6 +909,6 @@ json
     "error": "Failed to delete item"
 }
 
-Conclusion
+#Conclusion
 This documentation provides a comprehensive overview of the API endpoints available in your application. Each endpoint details the request method, expected request body, and potential responses for various scenarios. You can use tools like Postman to interact with these APIs for testing and development purposes.
 
